@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 @EntityListeners(AuditingEntityListener.class)  // This enables the entity to perform some operation before saving it into the db.
 @Getter
 @Setter
-public class User {
+public class Person {
 
     @Id
     @Column(nullable = false, updatable = false)

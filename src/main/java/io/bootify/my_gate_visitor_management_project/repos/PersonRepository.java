@@ -1,12 +1,12 @@
 package io.bootify.my_gate_visitor_management_project.repos;
 
-import io.bootify.my_gate_visitor_management_project.domain.User;
+import io.bootify.my_gate_visitor_management_project.domain.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    User findByEmail(String email);
+    Person findByEmail(String email);
     boolean existsByEmailIgnoreCase(String email);
 
     boolean existsByPhoneIgnoreCase(String phone);

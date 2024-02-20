@@ -2,13 +2,13 @@ package io.bootify.my_gate_visitor_management_project.service;
 
 import io.bootify.my_gate_visitor_management_project.domain.Address;
 import io.bootify.my_gate_visitor_management_project.domain.Flat;
-import io.bootify.my_gate_visitor_management_project.domain.User;
+import io.bootify.my_gate_visitor_management_project.domain.Person;
 import io.bootify.my_gate_visitor_management_project.model.AddressDTO;
 import io.bootify.my_gate_visitor_management_project.model.UserDTO;
 import io.bootify.my_gate_visitor_management_project.model.UserStatus;
 import io.bootify.my_gate_visitor_management_project.repos.AddressRepository;
 import io.bootify.my_gate_visitor_management_project.repos.FlatRepository;
-import io.bootify.my_gate_visitor_management_project.repos.UserRepository;
+import io.bootify.my_gate_visitor_management_project.repos.PersonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +18,12 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class UserServiceTest {
+public class PersonServiceTest {
 
-    // This interacts with Mockito framework to actually mocked which is decorated with @Mock annotation
+    // This interacts with Mockito framework to actually mock the service decorated with @Mock annotation
     private AutoCloseable autoCloseable;
     @Mock
-    private UserRepository userRepository;
+    private PersonRepository personRepository;
 
     @Mock
     private FlatRepository flatRepository;
@@ -37,7 +37,7 @@ public class UserServiceTest {
     private UserDTO userDTO;
     private AddressDTO addressDTO;
 
-    private User user;
+    private Person person;
     private Address address;
     private Flat flat;
 
@@ -46,18 +46,18 @@ public class UserServiceTest {
     {
         // Whatever service decorated with @Mock annotation will be mocked using below code.
         autoCloseable = MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository,flatRepository, addressRepository);
+        userService = new UserService(personRepository,flatRepository, addressRepository);
 
-        user = new User();
-        user.setName("Taylor");
-        user.setEmail("taylor@yopmail.com");
-        user.setPhone("9273273523");
-        user.setRole("admin");
-        user.setStatus(UserStatus.ACTIVE);
+        person = new Person();
+        person.setName("Taylor");
+        person.setEmail("taylor@yopmail.com");
+        person.setPhone("9273273523");
+        person.setRole("admin");
+        person.setStatus(UserStatus.ACTIVE);
 
         flat = new Flat();
         flat.setNumber("A-2234");
-        user.setFlat(flat);
+        person.setFlat(flat);
 
         address = new Address();
         address.setLine1("Test");
@@ -65,22 +65,22 @@ public class UserServiceTest {
         address.setPincode("454323");
         address.setCity("Mumbai");
         address.setCountry("India");
-        user.setAddress(address);
+        person.setAddress(address);
 
         addressDTO = new AddressDTO();
-        address.setLine1(address.getLine1());
-        address.setLine2(address.getLine2());
-        address.setPincode(address.getPincode());
-        address.setCity(address.getCity());
-        address.setCountry(address.getCountry());
+        addressDTO.setLine1(address.getLine1());
+        addressDTO.setLine2(address.getLine2());
+        addressDTO.setPincode(address.getPincode());
+        addressDTO.setCity(address.getCity());
+        addressDTO.setCountry(address.getCountry());
 
         userDTO = new UserDTO();
-        userDTO.setName(user.getName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPhone(user.getPhone());
-        userDTO.setRole(user.getRole());
-        userDTO.setStatus(user.getStatus());
-        userDTO.setFlatNumber(user.getFlat().getNumber());
+        userDTO.setName(person.getName());
+        userDTO.setEmail(person.getEmail());
+        userDTO.setPhone(person.getPhone());
+        userDTO.setRole(person.getRole());
+        userDTO.setStatus(person.getStatus());
+        userDTO.setFlatNumber(person.getFlat().getNumber());
         userDTO.setAddress(addressDTO);
     }
 
@@ -93,12 +93,8 @@ public class UserServiceTest {
     public void testCreateUser()
     {
         // While saving userRepository with any parameter we can pass our "user" object we created above.
-        when(userRepository.save(any())).thenReturn(user);
-        //when(addressRepository.save(any())).thenReturn(address);
-
-
-        String actualUserName = userService.create(userDTO); // Need to check for error in create() function
-        assert(actualUserName).equals(user.getName());
-
+        when(personRepository.save(any())).thenReturn(person);
+        String actualUserName = userService.create(userDTO);
+        assert(actualUserName).equals(person.getName());
     }
 }

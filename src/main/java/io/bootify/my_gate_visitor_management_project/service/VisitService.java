@@ -1,13 +1,13 @@
 package io.bootify.my_gate_visitor_management_project.service;
 
 import io.bootify.my_gate_visitor_management_project.domain.Flat;
-import io.bootify.my_gate_visitor_management_project.domain.User;
+import io.bootify.my_gate_visitor_management_project.domain.Person;
 import io.bootify.my_gate_visitor_management_project.domain.Visit;
 import io.bootify.my_gate_visitor_management_project.domain.Visitor;
 import io.bootify.my_gate_visitor_management_project.model.VisitDTO;
 import io.bootify.my_gate_visitor_management_project.model.VisitStatus;
 import io.bootify.my_gate_visitor_management_project.repos.FlatRepository;
-import io.bootify.my_gate_visitor_management_project.repos.UserRepository;
+import io.bootify.my_gate_visitor_management_project.repos.PersonRepository;
 import io.bootify.my_gate_visitor_management_project.repos.VisitRepository;
 import io.bootify.my_gate_visitor_management_project.repos.VisitorRepository;
 import io.bootify.my_gate_visitor_management_project.util.NotFoundException;
@@ -26,15 +26,15 @@ public class VisitService {
     private final VisitRepository visitRepository;
     private final VisitorRepository visitorRepository;
     private final FlatRepository flatRepository;
-    private final UserRepository userRepository;
+    private final PersonRepository personRepository;
 
     public VisitService(final VisitRepository visitRepository,
             final VisitorRepository visitorRepository, final FlatRepository flatRepository,
-            final UserRepository userRepository) {
+            final PersonRepository personRepository) {
         this.visitRepository = visitRepository;
         this.visitorRepository = visitorRepository;
         this.flatRepository = flatRepository;
-        this.userRepository = userRepository;
+        this.personRepository = personRepository;
     }
 
     public List<VisitDTO> findAll() {
@@ -143,8 +143,8 @@ public class VisitService {
         }
 
         if (visit.getStatus().equals(VisitStatus.WAITING)) {
-            User user = userRepository.findById(userId).get();
-            if (user.getFlat() == visit.getFlat()) {
+            Person person = personRepository.findById(userId).get();
+            if (person.getFlat() == visit.getFlat()) {
                 visit.setStatus(VisitStatus.APPROVED);
                 visitRepository.save(visit);
             } else {

@@ -53,7 +53,7 @@ public class Visit {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Person person;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

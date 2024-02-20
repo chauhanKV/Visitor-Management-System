@@ -26,7 +26,7 @@ public class Flat {
     private String number;
 
     @OneToMany(mappedBy = "flat")
-    private Set<User> users;
+    private Set<Person> people;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
