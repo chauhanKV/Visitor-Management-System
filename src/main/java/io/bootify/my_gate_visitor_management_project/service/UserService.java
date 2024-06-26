@@ -14,13 +14,17 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final PersonRepository personRepository;
     private final FlatRepository flatRepository;
@@ -160,4 +164,13 @@ public class UserService {
         return personRepository.existsByPhoneIgnoreCase(phone);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDetails userDetails = personRepository.findByEmail(username);
+        if(userDetails == null)
+        {
+            throw new UsernameNotFoundException("User does not exist");
+        }
+        return userDetails;
+    }
 }
