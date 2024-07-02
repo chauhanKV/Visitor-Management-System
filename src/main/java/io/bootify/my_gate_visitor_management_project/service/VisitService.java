@@ -1,5 +1,6 @@
 package io.bootify.my_gate_visitor_management_project.service;
 
+import io.bootify.my_gate_visitor_management_project.config.SecurityConfig;
 import io.bootify.my_gate_visitor_management_project.domain.Flat;
 import io.bootify.my_gate_visitor_management_project.domain.Person;
 import io.bootify.my_gate_visitor_management_project.domain.Visit;
@@ -14,6 +15,7 @@ import io.bootify.my_gate_visitor_management_project.util.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -136,7 +138,9 @@ public class VisitService {
     }
 
     @Transactional
-    public void approveVisit(Long visitId, Long userId) throws BadRequestException {
+    public void approveVisit(Long visitId) throws BadRequestException {
+        Person loggedIn = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = loggedIn.getId();
         Visit visit = visitRepository.findById(visitId).orElse(null);
         if (visit == null) {
             throw new NotFoundException();
@@ -155,9 +159,10 @@ public class VisitService {
 
     public void rejectVisit(Long visitId)
     {
+        Person loggedIn = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = loggedIn.getId();
         Visit visit = visitRepository.findById(visitId).orElse(null);
-        if(visit == null)
-        {
+        if (visit == null) {
             throw new NotFoundException();
         }
         if(visit.getStatus().equals(VisitStatus.WAITING)) {

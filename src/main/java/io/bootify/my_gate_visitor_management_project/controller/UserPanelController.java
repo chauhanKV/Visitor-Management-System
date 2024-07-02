@@ -19,8 +19,8 @@ public class UserPanelController {
 
     @PutMapping("/approveVisit/{visitId}")
     @ApiResponse(responseCode = "200")
-    public ResponseEntity<Void> approveVisit(@PathVariable Long visitId, @RequestHeader Long userId) throws BadRequestException {
-        visitService.approveVisit(visitId, userId);
+    public ResponseEntity<Void> approveVisit(@PathVariable Long visitId) throws BadRequestException {
+        visitService.approveVisit(visitId);
         return ResponseEntity.ok().build();
     }
 

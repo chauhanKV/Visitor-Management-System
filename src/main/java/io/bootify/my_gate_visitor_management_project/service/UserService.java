@@ -18,6 +18,7 @@ import org.springframework.security.config.authentication.UserServiceBeanDefinit
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +40,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<UserDTO> findAll() {
         final List<Person> people = personRepository.findAll(Sort.by("id"));
@@ -72,6 +76,7 @@ public class UserService implements UserDetailsService {
     public String create(final UserDTO userDTO) {
         final Person person = new Person();
         mapToEntity(userDTO, person);
+        person.setPassword(passwordEncoder.encode("test@123"));
         return personRepository.save(person).getName();
     }
 

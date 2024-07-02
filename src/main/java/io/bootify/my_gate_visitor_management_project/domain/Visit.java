@@ -47,7 +47,8 @@ public class Visit {
     private Visitor visitor;
 
     // LAZY means the value will not be fetched by default . It will only be fetched when the method is marked TRANSACTIONAL
-    @OneToOne(fetch = FetchType.LAZY)
+    // Made @ManyToOne because many visitors can visit on flat. Earlier when it was one to one, the data of visit was not inserting.
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flat_id")
     private Flat flat;
 

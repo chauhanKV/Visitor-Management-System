@@ -30,6 +30,8 @@ public class SecurityConfig {
                 .csrf((httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable()))
                 .authorizeHttpRequests((auth) -> {
                     auth.requestMatchers("/api/admin/**").hasAuthority("admin")
+                            .requestMatchers("/api/gatekeeper/**").hasAuthority("gatekeeper")
+                            .requestMatchers("/api/user").hasAuthority("resident")
                             .requestMatchers("/public/**").permitAll()
                             .anyRequest().authenticated();
                 })
