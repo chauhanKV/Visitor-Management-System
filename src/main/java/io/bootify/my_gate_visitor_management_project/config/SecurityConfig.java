@@ -31,8 +31,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> {
                     auth.requestMatchers("/api/admin/**").hasAuthority("admin")
                             .requestMatchers("/api/gatekeeper/**").hasAuthority("gatekeeper")
-                            .requestMatchers("/api/user").hasAuthority("resident")
+                            //.requestMatchers("/api/user/**").hasAuthority("resident")  // This is to check with single authority
+                            .requestMatchers("/api/user/**").hasAnyAuthority("resident", "admin") // since admin can also have flat
                             .requestMatchers("/public/**").permitAll()
+                            .requestMatchers("/v3/api-docs/**").permitAll()
+                            .requestMatchers("/swagger-ui/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .formLogin(Customizer.withDefaults())

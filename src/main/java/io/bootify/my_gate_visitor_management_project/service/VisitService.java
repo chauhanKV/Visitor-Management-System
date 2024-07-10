@@ -46,6 +46,18 @@ public class VisitService {
                 .toList();
     }
 
+    @Transactional
+    public List<VisitDTO> findAllWaitingVisitsByLoggedInUser() {
+        Person loggedInUser = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userID = loggedInUser.getId();
+        loggedInUser = personRepository.findById(userID).get();
+        Flat flat = loggedInUser.getFlat();
+        final List<Visit> visits = visitRepository.findByStatusAndFlat(VisitStatus.WAITING, flat);
+        return visits.stream()
+                .map(visit -> mapToDTO(visit, new VisitDTO()))
+                .toList();
+    }
+
     public List<VisitDTO> findAllWaitingVisits() {
         final List<Visit> visits = visitRepository.findByStatus(VisitStatus.WAITING);
         return visits.stream()
@@ -157,17 +169,22 @@ public class VisitService {
         }
     }
 
-    public void rejectVisit(Long visitId)
-    {
+    @Transactional
+    public void rejectVisit(Long visitId) throws BadRequestException {
         Person loggedIn = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = loggedIn.getId();
         Visit visit = visitRepository.findById(visitId).orElse(null);
         if (visit == null) {
             throw new NotFoundException();
         }
-        if(visit.getStatus().equals(VisitStatus.WAITING)) {
-            visit.setStatus(VisitStatus.REJECTED);
-            visitRepository.save(visit);
+        if (visit.getStatus().equals(VisitStatus.WAITING)) {
+            Person person = personRepository.findById(userId).get();
+            if (person.getFlat() == visit.getFlat()) {
+                visit.setStatus(VisitStatus.REJECTED);
+                visitRepository.save(visit);
+            } else {
+                throw new BadRequestException("User is not authorized to reject this request");
+            }
         }
     }
 }

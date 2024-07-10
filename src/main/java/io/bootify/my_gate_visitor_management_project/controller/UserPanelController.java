@@ -26,7 +26,7 @@ public class UserPanelController {
 
     @PutMapping("/rejectVisit/{visitId}")
     @ApiResponse(responseCode = "200")
-    public ResponseEntity<Void> rejectVisit(@PathVariable Long visitId) {
+    public ResponseEntity<Void> rejectVisit(@PathVariable Long visitId) throws BadRequestException {
         visitService.rejectVisit(visitId);
         return ResponseEntity.ok().build();
     }
@@ -34,7 +34,7 @@ public class UserPanelController {
     @GetMapping("/allPendingVisits")
     @ApiResponse(responseCode = "200")
     public ResponseEntity<List<VisitDTO>> getAllPendingVisits() {
-        visitService.findAllWaitingVisits();
-        return ResponseEntity.ok().build();
+        List<VisitDTO> response = visitService.findAllWaitingVisitsByLoggedInUser();
+        return ResponseEntity.ok(response);
     }
 }
